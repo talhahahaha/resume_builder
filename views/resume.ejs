@@ -1,0 +1,198 @@
+<% layout('layout') %>
+<h2 class="text-center mb-4">Resume Builder</h2>
+<% if (error && error.length) { %>
+  <div class="alert alert-danger text-center"><%= error %></div>
+<% } %>
+<% if (success && success.length) { %>
+  <div class="alert alert-success text-center"><%= success %></div>
+<% } %>
+<form action="/resume" method="POST" class="needs-validation" novalidate>
+  <div class="row mb-3">
+    <div class="col-12 text-center">
+      <h3 class="fw-bold"><input type="text" name="name" class="form-control-plaintext text-center fw-bold" placeholder="Your Name" required value="<%= resume ? resume.name : '' %>"></h3>
+      <div class="text-muted">
+        <span><input type="text" name="phone" class="form-control-plaintext text-center" placeholder="Phone" value="<%= resume ? resume.phone : '' %>"></span>
+        |
+        <span><input type="text" name="linkedin" class="form-control-plaintext text-center" placeholder="LinkedIn URL" value="<%= resume ? resume.linkedin : '' %>"></span>
+        |
+        <span><input type="email" name="contact_email" class="form-control-plaintext text-center" placeholder="Gmail" value="<%= resume ? resume.contact_email : '' %>"></span>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-12 text-center">
+      <textarea name="summary" class="form-control" placeholder="Summary" rows="3"><%= resume ? resume.summary : '' %></textarea>
+    </div>
+  </div>
+  <!-- Remove duplicate script and use only one JS block at the end -->
+
+<!-- Dynamic field containers for each section -->
+<div id="education-fields">
+  <% if (resume && resume.education && resume.education.length) { %>
+    <% resume.education.forEach(function(edu, idx) { %>
+      <div class="edu-group mb-2 row">
+        <div class="col-md-4 mb-1"><input type="text" name="education[<%= idx %>][school]" class="form-control" placeholder="School" required value="<%= edu.school %>"></div>
+        <div class="col-md-4 mb-1"><input type="text" name="education[<%= idx %>][degree]" class="form-control" placeholder="Degree" required value="<%= edu.degree %>"></div>
+        <div class="col-md-3 mb-1"><input type="text" name="education[<%= idx %>][year]" class="form-control" placeholder="Year" required value="<%= edu.year %>"></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addEducation()">Add Education</button>
+
+<div id="experience-fields">
+  <% if (resume && resume.experience && resume.experience.length) { %>
+    <% resume.experience.forEach(function(exp, idx) { %>
+      <div class="exp-group mb-2 row">
+        <div class="col-md-4 mb-1"><input type="text" name="experience[<%= idx %>][company]" class="form-control" placeholder="Company" required value="<%= exp.company %>"></div>
+        <div class="col-md-4 mb-1"><input type="text" name="experience[<%= idx %>][role]" class="form-control" placeholder="Role" required value="<%= exp.role %>"></div>
+        <div class="col-md-3 mb-1"><input type="text" name="experience[<%= idx %>][duration]" class="form-control" placeholder="Duration" required value="<%= exp.duration %>"></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addExperience()">Add Experience</button>
+
+<div id="skills-fields">
+  <% if (resume && resume.skills && resume.skills.length) { %>
+    <% resume.skills.forEach(function(skill) { %>
+      <div class="skill-group mb-2 row">
+        <div class="col-md-11 mb-1"><input type="text" name="skills[]" class="form-control" placeholder="Skill" required value="<%= skill %>"></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addSkill()">Add Skill</button>
+
+<div id="projects-fields">
+  <% if (resume && resume.projects && resume.projects.length) { %>
+    <% resume.projects.forEach(function(proj, idx) { %>
+      <div class="proj-group mb-2 row">
+        <div class="col-md-5 mb-1"><input type="text" name="projects[<%= idx %>][title]" class="form-control" placeholder="Title" required value="<%= proj.title %>"></div>
+        <div class="col-md-6 mb-1"><textarea name="projects[<%= idx %>][description]" class="form-control" placeholder="Description" required><%= proj.description %></textarea></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addProject()">Add Project</button>
+
+<div id="certifications-fields">
+  <% if (resume && resume.certifications && resume.certifications.length) { %>
+    <% resume.certifications.forEach(function(cert, idx) { %>
+      <div class="cert-group mb-2 row">
+        <div class="col-md-4 mb-1"><input type="text" name="certifications[<%= idx %>][name]" class="form-control" placeholder="Name" required value="<%= cert.name %>"></div>
+        <div class="col-md-4 mb-1"><input type="text" name="certifications[<%= idx %>][issuer]" class="form-control" placeholder="Issuer" required value="<%= cert.issuer %>"></div>
+        <div class="col-md-3 mb-1"><input type="text" name="certifications[<%= idx %>][year]" class="form-control" placeholder="Year" required value="<%= cert.year %>"></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addCertification()">Add Certification</button>
+
+<div id="achievements-fields">
+  <% if (resume && resume.achievements && resume.achievements.length) { %>
+    <% resume.achievements.forEach(function(ach) { %>
+      <div class="ach-group mb-2 row">
+        <div class="col-md-11 mb-1"><input type="text" name="achievements[]" class="form-control" placeholder="Achievement" required value="<%= ach %>"></div>
+        <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+<button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addAchievement()">Add Achievement</button>
+
+<div class="col-12 text-center">
+  <button type="submit" class="btn btn-success mt-3">Save Resume</button>
+</div>
+</form>
+
+<script>
+function addEducation() {
+  const idx = document.querySelectorAll('#education-fields .edu-group').length;
+  const div = document.createElement('div');
+  div.className = 'edu-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-4 mb-1"><input type="text" name="education[${idx}][school]" class="form-control" placeholder="School" required></div>
+    <div class="col-md-4 mb-1"><input type="text" name="education[${idx}][degree]" class="form-control" placeholder="Degree" required></div>
+    <div class="col-md-3 mb-1"><input type="text" name="education[${idx}][year]" class="form-control" placeholder="Year" required></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('education-fields').appendChild(div);
+}
+function addExperience() {
+  const idx = document.querySelectorAll('#experience-fields .exp-group').length;
+  const div = document.createElement('div');
+  div.className = 'exp-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-4 mb-1"><input type="text" name="experience[${idx}][company]" class="form-control" placeholder="Company" required></div>
+    <div class="col-md-4 mb-1"><input type="text" name="experience[${idx}][role]" class="form-control" placeholder="Role" required></div>
+    <div class="col-md-3 mb-1"><input type="text" name="experience[${idx}][duration]" class="form-control" placeholder="Duration" required></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('experience-fields').appendChild(div);
+}
+function addSkill() {
+  const idx = document.querySelectorAll('#skills-fields .skill-group').length;
+  const div = document.createElement('div');
+  div.className = 'skill-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-11 mb-1"><input type="text" name="skills[]" class="form-control" placeholder="Skill" required></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('skills-fields').appendChild(div);
+}
+function addProject() {
+  const idx = document.querySelectorAll('#projects-fields .proj-group').length;
+  const div = document.createElement('div');
+  div.className = 'proj-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-5 mb-1"><input type="text" name="projects[${idx}][title]" class="form-control" placeholder="Title" required></div>
+    <div class="col-md-6 mb-1"><textarea name="projects[${idx}][description]" class="form-control" placeholder="Description" required></textarea></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('projects-fields').appendChild(div);
+}
+function addCertification() {
+  const idx = document.querySelectorAll('#certifications-fields .cert-group').length;
+  const div = document.createElement('div');
+  div.className = 'cert-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-4 mb-1"><input type="text" name="certifications[${idx}][name]" class="form-control" placeholder="Name" required></div>
+    <div class="col-md-4 mb-1"><input type="text" name="certifications[${idx}][issuer]" class="form-control" placeholder="Issuer" required></div>
+    <div class="col-md-3 mb-1"><input type="text" name="certifications[${idx}][year]" class="form-control" placeholder="Year" required></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('certifications-fields').appendChild(div);
+}
+function addAchievement() {
+  const idx = document.querySelectorAll('#achievements-fields .ach-group').length;
+  const div = document.createElement('div');
+  div.className = 'ach-group mb-2 row';
+  div.innerHTML = `
+    <div class="col-md-11 mb-1"><input type="text" name="achievements[]" class="form-control" placeholder="Achievement" required></div>
+    <div class="col-md-1 mb-1"><button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Delete</button></div>
+  `;
+  document.getElementById('achievements-fields').appendChild(div);
+}
+// Use EJS to set JS booleans, then use JS conditions
+var hasEducation = "<%= resume && resume.education && resume.education.length ? 'true' : 'false' %>";
+var hasExperience = "<%= resume && resume.experience && resume.experience.length ? 'true' : 'false' %>";
+var hasSkills = "<%= resume && resume.skills && resume.skills.length ? 'true' : 'false' %>";
+var hasProjects = "<%= resume && resume.projects && resume.projects.length ? 'true' : 'false' %>";
+var hasCertifications = "<%= resume && resume.certifications && resume.certifications.length ? 'true' : 'false' %>";
+var hasAchievements = "<%= resume && resume.achievements && resume.achievements.length ? 'true' : 'false' %>";
+
+window.onload = function() {
+  if (!hasEducation) addEducation();
+  if (!hasExperience) addExperience();
+  if (!hasSkills) addSkill();
+  if (!hasProjects) addProject();
+  if (!hasCertifications) addCertification();
+  if (!hasAchievements) addAchievement();
+};
+</script>

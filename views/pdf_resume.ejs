@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Resume PDF</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    ul { margin: 0; padding: 0 0 0 20px; }
+    .section { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Resume</h2>
+  <div class="section"><strong>Summary:</strong> <%= resume.summary %></div>
+  <div class="section"><strong>Education:</strong>
+    <ul>
+      <% resume.education.forEach(function(edu) { %>
+        <li><%= edu.school %> - <%= edu.degree %> (<%= edu.year %>)</li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="section"><strong>Experience:</strong>
+    <ul>
+      <% resume.experience.forEach(function(exp) { %>
+        <li><%= exp.company %> - <%= exp.role %> (<%= exp.duration %>)</li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="section"><strong>Skills:</strong>
+    <ul>
+      <% resume.skills.forEach(function(skill) { %>
+        <li><%= skill %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="section"><strong>Projects:</strong>
+    <ul>
+      <% resume.projects.forEach(function(proj) { %>
+        <li><strong><%= proj.title %></strong>: <%= proj.description %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="section"><strong>Certifications:</strong>
+    <ul>
+      <% resume.certifications.forEach(function(cert) { %>
+        <li><%= cert.name %> - <%= cert.issuer %> (<%= cert.year %>)</li>
+      <% }) %>
+    </ul>
+  </div>
+  <div class="section"><strong>Achievements:</strong>
+    <ul>
+      <% resume.achievements.forEach(function(ach) { %>
+        <li><%= ach %></li>
+      <% }) %>
+    </ul>
+  </div>
+</body>
+</html>

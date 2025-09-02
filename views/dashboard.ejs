@@ -1,0 +1,69 @@
+<% layout('layout') %>
+<h2>Dashboard</h2>
+<% if (resumes.length === 0) { %>
+  <p>No resumes found. <a href="/resume" class="btn btn-success">Create Resume</a></p>
+<% } else { %>
+  <% resumes.forEach(function(resume, idx) { %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="text-center w-100">
+            <h3 class="fw-bold mb-1"><%= resume.name %></h3>
+            <div class="text-muted small">
+              <span><%= resume.phone %></span>
+              <% if (resume.linkedin) { %> | <a href="<%= resume.linkedin %>" target="_blank">LinkedIn</a><% } %>
+              <% if (resume.contact_email) { %> | <a href="mailto:<%= resume.contact_email %>"><%= resume.contact_email %></a><% } %>
+            </div>
+          </div>
+          <span class="badge bg-info ms-2">Version <%= resumes.length - idx %></span>
+        </div>
+        <h5 class="card-title">Summary</h5>
+        <p><%= resume.summary %></p>
+        <h6>Education</h6>
+        <ul>
+          <% resume.education.forEach(function(edu) { %>
+            <li><%= edu.school %> - <%= edu.degree %> (<%= edu.year %>)</li>
+          <% }) %>
+        </ul>
+        <h6>Experience</h6>
+        <ul>
+          <% resume.experience.forEach(function(exp) { %>
+            <li><%= exp.company %> - <%= exp.role %> (<%= exp.duration %>)</li>
+          <% }) %>
+        </ul>
+        <h6>Skills</h6>
+        <ul>
+          <% resume.skills.forEach(function(skill) { %>
+            <li><%= skill %></li>
+          <% }) %>
+        </ul>
+        <h6>Projects</h6>
+        <ul>
+          <% resume.projects.forEach(function(proj) { %>
+            <li><strong><%= proj.title %></strong>: <%= proj.description %></li>
+          <% }) %>
+        </ul>
+        <h6>Certifications</h6>
+        <ul>
+          <% resume.certifications.forEach(function(cert) { %>
+            <li><%= cert.name %> - <%= cert.issuer %> (<%= cert.year %>)</li>
+          <% }) %>
+        </ul>
+        <h6>Achievements</h6>
+        <ul>
+          <% resume.achievements.forEach(function(ach) { %>
+            <li><%= ach %></li>
+          <% }) %>
+        </ul>
+        <div class="d-flex justify-content-end gap-2 mt-2">
+          <a href="/resume/<%= resume._id %>/edit" class="btn btn-primary">Edit</a>
+          <form action="/resume/<%= resume._id %>" method="POST" style="display:inline;">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this resume version?');">Delete</button>
+          </form>
+          <a href="/resume/<%= resume._id %>/download" class="btn btn-outline-secondary">Download PDF</a>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+<% } %>
